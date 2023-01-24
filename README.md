@@ -119,3 +119,36 @@ As expected, Flask is the main dependency for creating a Web app. The project al
 In addition, the webpage uses [Semantic UI](https://semantic-ui.com) for content styling.
 
 Please check out the [requirements.txt](./requirements.txt) file for additional dependencies.
+
+
+## Running the Project Locally
+
+To run the project, ensure that you have NPM installed. You also need the _json-server_ installed globally before starting.
+
+1. Clone the project locally
+
+```
+git clone https://github.com/gabrielcostasilva/python-flask-todo.git
+```
+
+2. In the project folder, create and activate a virtual environment
+
+```
+python3 -m venv venv
+source venv/bin/activate
+
+```
+
+3. Install dependencies
+
+```
+pip install -r requiments.txt
+```
+
+4. Start the application
+
+```
+python3 application.py
+```
+
+5. Access the app with your browser at `http://localhost:5000`

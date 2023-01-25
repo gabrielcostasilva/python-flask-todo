@@ -152,3 +152,7 @@ python3 application.py
 ```
 
 5. Access the app with your browser at `http://localhost:5000`
+
+## Additional References
+
+- [Deploy to AWS Elastic Beanstalk](https://testdriven.io/blog/flask-elastic-beanstalk/)

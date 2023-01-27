@@ -1,6 +1,12 @@
 # PYTHON FLASK TODO APP
 This is a traditional Python 3 TODO app with [Flask framework](https://flask.palletsprojects.com). This project is based on [Patrick Loeber's video](https://www.youtube.com/watch?v=3vfum74ggHE) analysing three Python frameworks for Web apps.
 
+## Other Branches
+
+This original project is extended in other branches.
+
+- [Unit-test](https://github.com/gabrielcostasilva/python-flask-todo/tree/unit-test) adds unit tests with Pytest.
+
 ## Overview
 <img src="./docs/main.png" />
 

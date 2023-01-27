@@ -1,158 +1,64 @@
-# PYTHON FLASK TODO APP
+# PYTHON FLASK TODO APP - UNIT-TEST BRANCH
 This is a traditional Python 3 TODO app with [Flask framework](https://flask.palletsprojects.com). This project is based on [Patrick Loeber's video](https://www.youtube.com/watch?v=3vfum74ggHE) analysing three Python frameworks for Web apps.
 
+This branch adds unit tests with [Pytest](https://docs.pytest.org).
+
+> If you want to understand the underlying application, please check out the [main branch](https://github.com/gabrielcostasilva/python-flask-todo.git).
+
 ## Overview
-<img src="./docs/main.png" />
+Adding unit tests with Pytest requires three steps, as detailed below:
 
-The application uses the traditional MVC structure. Therefore, it consists of model, view and controller. Apart from the view, represented by the [base.html file](./templates/base.html), the code is entirelly implemented in a single file - [application.py](./application.py).
+1. Install dependency with `pip install pytest`
+2. Create the [`tests` folder](./tests/) to group unit tests. Notice this folder has an empty `__init__.py` file to enable importing Python modules.
+3. Create the [`conftest.py` file](./tests/conftest.py). This is a configuration file. It basically sets the test client.
+4. Create unit tests. In this project, all our tests are in the [`test_application.py` file](./tests/test_application.py).
 
-### The TODO model
+### Unit tests
+Both the file and the tests start with `test_`. It seems this is a requirement. 
+
+If you are familiar with software testing, each tests consists of one or more _assertions_.
+
+The code below shows the full test for testing the DB model. The code imports the `Todo` model from the application, and checks whether the attribute is set as expected - unnecessary, but I am just practicing.
+
+```python
+from application import Todo
+
+def test_model():
+    a_todo = Todo(title="To wash car", complete=False)
+    assert a_todo.complete == False
+```
+
+All other tests in the `test_application` file uses the test client to access the **running** application. Therefore, they receive the test client as a parameter.
 
 ```python
 (...)
 
-app = Flask(__name__) # (2)
-
-(...)
-
-db = SQLAlchemy(app) # (1)
+def test_page_load(client):
 
 (...)
 ```
 
-The model is set as a subclass of a `Model`, defined by SQLAlchemy library. The model maps table columns and object attributes (ORM). One should create an instance of `SQLAlchemy` to having access to `Model` (1). Notice the instance uses the application instance as a parameter (2).
-
-
-```python
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    complete = db.Column(db.Boolean)
-```
-
-The TODO model consists of three attributes:
-- `id` is a unique key representing each TODO.
-- `title` represents the TODO itself.
-- `complete` flags the completion status of a TODO.
-
-### Routes (controller)
+The test client provides features for accessing the application and evaluating its response. The code snippet below examplify three features. The snippet sends a `POST` request to the `/add` route, with the `data` content, following all redirects till reach the final response (`follow_redirects=True`).
 
 ```python
 (...)
 
-@app.get("/")
-def home():
-    (...)
-
-@app.post("/add")
-def add():
-    (...)
-
-@app.get("/update/<int:todo_id>")
-def update(todo_id):
-    (...)
-
-@app.get("/delete/<int:todo_id>")
-def delete(todo_id):
-    (...)
-```
-
-As a traditional CRUD, there are four routes - one for each CRUD behaviour. Decorators map routes to Python functions. 
-
-> Remember that `app` is an instance of the `Flask` object. 
-
-Each decorator sets the HTTP method to use, and the route. Routes that rely on parameters, such as `/update` and `/delete`, also define the parameter type and name. The same name is set in the function parameter list.
-
-### View (webpage)
-
-The webpage is a simple HTML 5 page with Jinja2 template language. The template language is used to dynamically render the TODO list.
-
-```html
-{% for todo in todos %}
-<div class="ui segment">
-    <p class="ui big header">{{todo.id }} | {{ todo.title }}</p>
-
-    {% if todo.complete == False %}
-    <span class="ui gray label">Not Complete</span>
-    {% else %}
-    <span class="ui green label">Completed</span>
-    {% endif %}
-
-    <a class="ui blue button" href="/update/{{ todo.id }}">Update</a>
-    <a class="ui red button" href="/delete/{{ todo.id }}">Delete</a>
-</div>
-{% endfor %}
-```
-
-The code above starts and ends with a directive for repeting the nested code according to the number of elements in `todos`. It places the current value of `todo.id` and `todo.title`. It also styles the TODO completion according to its status.
-
-> Styling is done by Semantic-UI framework.
-
-```python
-(...)
-
-@app.get("/")
-def home():
-    todo_list = db.session.query(Todo).all()
-    return render_template("base.html", todos=todo_list) # (1)
+response = client.post("/add", 
+            data={"title": "To learn pytest"}, 
+            follow_redirects=True)
 
 (...)
 ```
 
-The route `/` creates the `todos` variable the template uses (1). The variable is a list of the TODO model. 
+Once the `response` is populated, one can check whether a text is part of it (`b"<label>Todo Title</label>" in response.data`) or the status code matches the expectation (`response.status_code == 200`).
 
-The template is called either by `render_template("base.html", todos=todo_list)` or by `redirect(url_for("home"))`. `render_template()`, `redirect()` and `url_for()` are functions for the `flask` library.
+## Testing the Project
+With the application running, just run `pytest` from your terminal. 
 
-### Data manipulation
-Each route saves, retrieve, update, or delete data in a SQLite database using SQLAlchemy functions. 
-
-- `db.create_all()` creates the table and its columns as defined in the `Model`.
-- `db.session.query(Todo).all()` retrieves all rows from the table.
-- `db.session.add(new_todo)` save the data.
-- `db.session.commit()` flushes and commits the transaction.
-- `db.session.query(Todo).filter(Todo.id == todo_id).first()` query the table following the TODO model, and retrieves the first match.
-- `db.session.delete(todo)` delete the row.
-
-## Dependencies
-As expected, Flask is the main dependency for creating a Web app. The project also relies on [SQLAlchemy](https://www.sqlalchemy.org) for object-relational mapping. Finally, [Jinja2](https://palletsprojects.com/p/jinja/) provides a template engine for rendering dynamic content on webpages.
-
-In addition, the webpage uses [Semantic UI](https://semantic-ui.com) for content styling.
-
-Please check out the [requirements.txt](./requirements.txt) file for additional dependencies.
-
-
-## Running the Project Locally
-
-To run the project, ensure that you have NPM installed. You also need the _json-server_ installed globally before starting.
-
-1. Clone the project locally
-
-```
-git clone https://github.com/gabrielcostasilva/python-flask-todo.git
-```
-
-2. In the project folder, create and activate a virtual environment
-
-```
-python3 -m venv venv
-source venv/bin/activate
-
-```
-
-3. Install dependencies
-
-```
-pip install -r requiments.txt
-```
-
-4. Start the application
-
-```
-python3 application.py
-```
-
-5. Access the app with your browser at `http://localhost:5000`
+> Be aware that the tests reach out the DB!
 
 ## Additional References
 
-- [Deploy to AWS Elastic Beanstalk](https://testdriven.io/blog/flask-elastic-beanstalk/)
+- [Testing Flask Applications](https://flask.palletsprojects.com/en/2.2.x/testing/) is a guide from the official Flask docs. It helped to understand how to use the test client.
+- [Testing Flask Applications with Pytest](https://testdriven.io/blog/flask-pytest/) shows how to test DB models, and clarify a typical testing directory structure.
+- [How to add a basic unit test to a Python Flask app using Pytest](https://medium.com/globant/how-to-add-a-basic-unit-test-to-a-python-flask-app-using-pytest-79e61da76fc2) explains the use of fixtures for a simple Flask structure, such as the one used in this project. 

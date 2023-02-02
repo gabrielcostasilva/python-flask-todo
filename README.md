@@ -7,6 +7,7 @@ This original project is extended in other branches.
 
 - [unit-test](https://github.com/gabrielcostasilva/python-flask-todo/tree/unit-test) adds unit tests with Pytest.
 - [docker-dev](https://github.com/gabrielcostasilva/python-flask-todo/tree/docker-dev) containerises the application with docker using a DEV server.
+- [docker-prod](https://github.com/gabrielcostasilva/python-flask-todo/tree/docker-prod) uses Gunicorn as a production server for the containerised application.
 
 ## Overview
 <img src="./docs/main.png" />

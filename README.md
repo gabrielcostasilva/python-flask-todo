@@ -10,7 +10,7 @@ As a reference, we use [Patrick Loeber's video](https://www.youtube.com/watch?v=
 ## Overview
 Unlike the [docker-dev branch](https://github.com/gabrielcostasilva/python-flask-todo/tree/docker-dev), this branch uses production server - Gunicorn. 
 
-Apart from the dependency, there are little changes to the application and the Dockerfile. Please checkout the changes in the commit.
+Apart from the dependency, there are little changes to the application and the Dockerfile. Please checkout the changes in [the commit](https://github.com/gabrielcostasilva/python-flask-todo/commit/fde7bbc724888377d8f18639c3727b068dcdabec).
 
 ## Running the Project
 First, ensure you have Docker desktop installed **and running**. 

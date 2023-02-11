@@ -8,6 +8,7 @@ This original project is extended in other branches.
 - [unit-test](https://github.com/gabrielcostasilva/python-flask-todo/tree/unit-test) adds unit tests with Pytest.
 - [docker-dev](https://github.com/gabrielcostasilva/python-flask-todo/tree/docker-dev) containerises the application with docker using a DEV server.
 - [docker-prod](https://github.com/gabrielcostasilva/python-flask-todo/tree/docker-prod) uses Gunicorn as a production server for the containerised application.
+- [mysql](https://github.com/gabrielcostasilva/python-flask-todo/tree/mysql) replaces SQLLite with MySQL as DB.
 
 ## Overview
 <img src="./docs/main.png" />
@@ -130,9 +131,6 @@ Please check out the [requirements.txt](./requirements.txt) file for additional 
 
 
 ## Running the Project Locally
-
-To run the project, ensure that you have NPM installed. You also need the _json-server_ installed globally before starting.
-
 1. Clone the project locally
 
 ```
